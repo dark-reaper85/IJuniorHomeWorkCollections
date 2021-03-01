@@ -34,11 +34,19 @@ namespace PersonnelAccountingWithDictionary
                         Console.WriteLine("Введите имя нового работника");
                         string addName = Console.ReadLine();
                         
-                        Console.WriteLine("Введите должность нового рабтника");
-                        string addPost = Console.ReadLine();
+                        if (CheckFiles(files, addName))
+                        {
+                            Console.WriteLine("Введите должность нового рабтника");
+                            string addPost = Console.ReadLine();
 
-                        files.Add(addName, addPost);
-                        Console.WriteLine("Новый работник добавлен");
+                            Console.WriteLine("Новый работник добавлен");
+                            files.Add(addName, addPost);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Работник с таким именем уже есть в базе");
+                        }
+
                         Console.ReadKey();
                         break;
                     case "2":
@@ -56,28 +64,7 @@ namespace PersonnelAccountingWithDictionary
                         Console.WriteLine("Введите номер удаляемого досье");
                         int deletingFileNumber = Convert.ToInt32(Console.ReadLine());
 
-                        if (deletingFileNumber > 0 && deletingFileNumber <= files.Count)
-                        {
-                            int j = 1;
-                            string deletingFile = null;
-
-                            foreach (var file in files)
-                            {
-                                if (j == deletingFileNumber) 
-                                {
-                                    deletingFile = file.Key;
-                                }
-
-                                j++;
-                            }
-
-                            files.Remove(deletingFile);
-                            Console.WriteLine($"Досье №{deletingFileNumber} удалено");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Досье с таким номером отсутствует");
-                        }
+                        DeleteFile(files, deletingFileNumber);
 
                         Console.ReadKey();
                         break;
@@ -91,6 +78,43 @@ namespace PersonnelAccountingWithDictionary
                 }
             }
 
+        }
+        static void DeleteFile( Dictionary<string,string> files ,int deletingFileNumber) 
+        {
+            if (deletingFileNumber > 0 && deletingFileNumber <= files.Count)
+            {
+                int j = 1;
+                string deletingFile = null;
+
+                foreach (var file in files)
+                {
+                    if (j == deletingFileNumber)
+                    {
+                        deletingFile = file.Key;
+                        break;
+                    }
+
+                    j++;
+                }
+
+                files.Remove(deletingFile);
+                Console.WriteLine($"Досье №{deletingFileNumber} удалено");
+            }
+            else
+            {
+                Console.WriteLine("Досье с таким номером отсутствует");
+            }
+        }
+        static bool CheckFiles(Dictionary<string, string> files, string name) 
+        {
+            foreach (var file in files)
+            {
+                if (name == file.Key) 
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
